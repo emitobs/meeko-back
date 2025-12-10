@@ -25,28 +25,30 @@ app.use(helmet({
 
 // CORS - Configuración mejorada
 app.use(cors({
-  origin: config.isProduction 
-    ? config.frontendUrl 
-    : (origin, callback) => {
-        // En desarrollo, permitir cualquier origen localhost o 127.0.0.1
-        const allowedOrigins = [
-          'http://localhost:4321',
-          'http://localhost:3000',
-          'http://localhost:5173',
-          'http://localhost:5174',
-          'http://127.0.0.1:4321',
-          'http://127.0.0.1:3000',
-          'http://127.0.0.1:5173',
-          config.frontendUrl
-        ];
-        
-        // Permitir solicitudes sin origin (como Postman, curl, etc.)
-        if (!origin || allowedOrigins.includes(origin)) {
-          callback(null, true);
-        } else {
-          callback(null, false);
-        }
-      },
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      config.frontendUrl,
+      'https://meeko.pet',
+      'https://www.meeko.pet',
+      // Permitir desarrollo local incluso en producción
+      'http://localhost:4321',
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'http://127.0.0.1:4321',
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:5173',
+      'http://127.0.0.1:5174',
+    ];
+    
+    // Permitir solicitudes sin origin (como Postman, curl, etc.)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log(`❌ CORS blocked origin: ${origin}`);
+      callback(null, false);
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
