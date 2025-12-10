@@ -1,9 +1,52 @@
 import { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import fs from 'fs/promises';
+import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { config } from '../config/index.js';
 import { BadRequestError, NotFoundError, UnauthorizedError, ForbiddenError } from '../middleware/errorHandler.js';
 import prisma from '../lib/prisma.js';
+import { s3Client, getS3Url } from '../lib/s3.js';
+
+/**
+ * Obtener URL del archivo subido
+ */
+function getFileUrl(file: Express.Multer.File): string {
+  if (config.upload.useS3) {
+    // @ts-ignore - multer-s3 agrega estas propiedades
+    return file.location || getS3Url(file.key);
+  }
+  return `/uploads/${file.filename}`;
+}
+
+/**
+ * Eliminar archivo (S3 o local)
+ */
+async function deleteFile(fileUrl: string): Promise<void> {
+  if (config.upload.useS3) {
+    // Extraer la key del URL
+    const key = fileUrl.split('.amazonaws.com/')[1] || fileUrl.split('.cloudfront.net/')[1];
+    if (key) {
+      try {
+        await s3Client.send(new DeleteObjectCommand({
+          Bucket: config.aws.bucketName,
+          Key: key,
+        }));
+      } catch (error) {
+        console.error('Error eliminando archivo de S3:', error);
+      }
+    }
+  } else {
+    // Eliminar archivo local
+    if (fileUrl.startsWith('/uploads/')) {
+      const filePath = path.join(config.upload.dir, path.basename(fileUrl));
+      try {
+        await fs.unlink(filePath);
+      } catch (error) {
+        // Ignorar si no existe
+      }
+    }
+  }
+}
 
 /**
  * Subir imagen
@@ -23,7 +66,7 @@ export async function uploadImage(
       throw new BadRequestError('No se proporcionó ninguna imagen');
     }
 
-    const imageUrl = `/uploads/${req.file.filename}`;
+    const imageUrl = getFileUrl(req.file);
 
     res.status(201).json({
       success: true,
@@ -76,17 +119,12 @@ export async function uploadPetImage(
       throw new BadRequestError('No se proporcionó ninguna imagen');
     }
 
-    const imageUrl = `/uploads/${req.file.filename}`;
+    const imageUrl = getFileUrl(req.file);
 
     if (type === 'main') {
       // Eliminar imagen anterior si existe
-      if (pet.fotoPrincipal && pet.fotoPrincipal.startsWith('/uploads/')) {
-        const oldPath = path.join(config.upload.dir, path.basename(pet.fotoPrincipal));
-        try {
-          await fs.unlink(oldPath);
-        } catch {
-          // Ignorar si no existe
-        }
+      if (pet.fotoPrincipal) {
+        await deleteFile(pet.fotoPrincipal);
       }
 
       // Actualizar foto principal
@@ -145,6 +183,8 @@ export async function uploadAvatar(
       throw new BadRequestError('No se proporcionó ninguna imagen');
     }
 
+    const imageUrl = getFileUrl(req.file);
+
     // Obtener usuario actual
     const user = await prisma.user.findUnique({
       where: { id: req.user.id },
@@ -152,27 +192,20 @@ export async function uploadAvatar(
     });
 
     // Eliminar avatar anterior si existe
-    if (user?.avatar && user.avatar.startsWith('/uploads/')) {
-      const oldPath = path.join(config.upload.dir, path.basename(user.avatar));
-      try {
-        await fs.unlink(oldPath);
-      } catch {
-        // Ignorar si no existe
-      }
+    if (user?.avatar) {
+      await deleteFile(user.avatar);
     }
-
-    const avatarUrl = `/uploads/${req.file.filename}`;
 
     // Actualizar avatar
     await prisma.user.update({
       where: { id: req.user.id },
-      data: { avatar: avatarUrl },
+      data: { avatar: imageUrl },
     });
 
     res.json({
       success: true,
       message: 'Avatar actualizado',
-      data: { url: avatarUrl },
+      data: { url: imageUrl },
     });
   } catch (error) {
     next(error);

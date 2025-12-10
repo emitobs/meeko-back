@@ -20,16 +20,40 @@ const app = express();
 // Helmet para seguridad
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
+  crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
 }));
 
-// CORS
+// CORS - Configuración mejorada
 app.use(cors({
   origin: config.isProduction 
     ? config.frontendUrl 
-    : ['http://localhost:4321', 'http://localhost:3000', 'http://127.0.0.1:4321'],
+    : (origin, callback) => {
+        // En desarrollo, permitir cualquier origen localhost o 127.0.0.1
+        const allowedOrigins = [
+          'http://localhost:4321',
+          'http://localhost:3000',
+          'http://localhost:5173',
+          'http://localhost:5174',
+          'http://127.0.0.1:4321',
+          'http://127.0.0.1:3000',
+          'http://127.0.0.1:5173',
+          config.frontendUrl
+        ];
+        
+        // Permitir solicitudes sin origin (como Postman, curl, etc.)
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(null, false);
+        }
+      },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Content-Length', 'Content-Type'],
+  maxAge: 86400, // 24 horas
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }));
 
 // Rate limiting
@@ -47,8 +71,8 @@ app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Servir archivos estáticos (uploads)
-app.use('/uploads', express.static(config.upload.dir));
+// Servir archivos estáticos (uploads) con CORS
+app.use('/uploads', cors(), express.static(config.upload.dir));
 
 // ================================
 // DOCUMENTACIÓN SWAGGER

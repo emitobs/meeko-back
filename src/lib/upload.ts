@@ -3,8 +3,9 @@ import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { config } from '../config/index.js';
 import { BadRequestError } from '../middleware/errorHandler.js';
+import { uploadS3Single as s3Single, uploadS3Multiple as s3Multiple } from './uploadS3.js';
 
-// Configurar almacenamiento
+// Configurar almacenamiento local
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
     cb(null, config.upload.dir);
@@ -18,16 +19,16 @@ const storage = multer.diskStorage({
 
 // Filtrar tipos de archivo
 const fileFilter: multer.Options['fileFilter'] = (_req, file, cb) => {
-  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-  if (allowedTypes.includes(file.mimetype)) {
+  const allowedMimeTypes = config.upload.allowedMimeTypes as readonly string[];
+  if (allowedMimeTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new BadRequestError('Tipo de archivo no permitido. Solo se permiten imagenes.'));
+    cb(new BadRequestError('Tipo de archivo no permitido. Solo se permiten imágenes.'));
   }
 };
 
-// Crear instancia de multer
-export const upload = multer({
+// Crear instancia de multer para almacenamiento local
+const uploadLocal = multer({
   storage,
   fileFilter,
   limits: {
@@ -35,8 +36,6 @@ export const upload = multer({
   },
 });
 
-// Middleware para subir una sola imagen
-export const uploadSingle = upload.single('image');
-
-// Middleware para subir multiples imagenes
-export const uploadMultiple = upload.array('images', 10);
+// Exportar middleware según configuración (S3 o local)
+export const uploadSingle = config.upload.useS3 ? s3Single : uploadLocal.single('image');
+export const uploadMultiple = config.upload.useS3 ? s3Multiple : uploadLocal.array('images', 10);

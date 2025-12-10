@@ -67,6 +67,19 @@ npm run build
 npm start
 ```
 
+### 5. (Opcional) Configurar AWS S3
+
+Por defecto, las imágenes se guardan localmente. Para usar AWS S3 (capa gratuita):
+
+1. Sigue la guía completa: [`docs/AWS_S3_SETUP.md`](./docs/AWS_S3_SETUP.md)
+2. Configura las variables en `.env`:
+```env
+USE_S3=true
+AWS_ACCESS_KEY_ID=tu_access_key
+AWS_SECRET_ACCESS_KEY=tu_secret_key
+AWS_BUCKET_NAME=tu-bucket-name
+```
+
 ## 📚 Endpoints de la API
 
 ### Autenticación
@@ -182,6 +195,14 @@ npm test             # Ejecutar tests
 | `FRONTEND_URL` | URL del frontend | `http://localhost:4321` |
 | `UPLOAD_DIR` | Directorio de uploads | `uploads` |
 | `MAX_FILE_SIZE` | Tamaño máximo de archivo | `5242880` (5MB) |
+| `USE_S3` | Usar AWS S3 para uploads | `false` |
+| `AWS_ACCESS_KEY_ID` | AWS Access Key (si USE_S3=true) | - |
+| `AWS_SECRET_ACCESS_KEY` | AWS Secret Key (si USE_S3=true) | - |
+| `AWS_REGION` | Región de AWS | `us-east-1` |
+| `AWS_BUCKET_NAME` | Nombre del bucket S3 | - |
+| `AWS_CLOUDFRONT_URL` | URL de CloudFront (opcional) | - |
+
+Ver [`.env.example`](./.env.example) para más detalles.
 
 ## 👥 Usuarios de Prueba
 
