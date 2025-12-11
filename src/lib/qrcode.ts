@@ -119,6 +119,8 @@ export async function generatePetQRCode(
   logoPath?: string
 ): Promise<string> {
   // Verificar si existe el logo predeterminado
+  // En producción (Plesk), process.cwd() apunta a /httpdocs
+  // En desarrollo, apunta a la raíz del proyecto
   const defaultLogoPath = path.join(process.cwd(), 'public', 'logo-qr.png');
   let finalLogoPath = logoPath;
   
@@ -126,7 +128,10 @@ export async function generatePetQRCode(
     try {
       await fs.access(defaultLogoPath);
       finalLogoPath = defaultLogoPath;
-    } catch {
+      console.log('✅ Logo encontrado en:', defaultLogoPath);
+    } catch (error) {
+      console.warn('⚠️ Logo no encontrado en:', defaultLogoPath);
+      console.warn('💡 Asegúrate de subir public/logo-qr.png al servidor');
       // Si no existe logo, generar QR sin logo
       finalLogoPath = undefined;
     }

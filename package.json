@@ -14,7 +14,8 @@
     "db:studio": "prisma studio",
     "lint": "eslint src --ext .ts",
     "test": "vitest",
-    "test:qr": "node test-qr.js"
+    "test:qr": "node test-qr.js",
+    "check:logo": "node -e \"const fs=require('fs'),p='public/logo-qr.png';fs.access(p,e=>console.log(e?'❌ Logo NO encontrado':'✅ Logo encontrado en '+p))\""
   },
   "keywords": [
     "petqr",
