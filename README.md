@@ -6,8 +6,9 @@ Backend API REST para el sistema de identificación de mascotas por código QR.
 
 - **Autenticación JWT** - Registro, login y gestión de usuarios
 - **CRUD de Mascotas** - Crear, leer, actualizar y eliminar mascotas
-- **Generación de QR** - Códigos QR únicos para cada mascota
+- **Generación de QR** - Códigos QR únicos para cada mascota **con logo personalizable**
 - **Galería de Fotos** - Múltiples fotos por mascota
+- **Upload de Imágenes** - Almacenamiento local o AWS S3
 - **Estadísticas de Escaneos** - Seguimiento de cuándo y dónde se escanean los QR
 - **Documentación Swagger** - API completamente documentada
 

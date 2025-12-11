@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import QRCode from 'qrcode';
 import prisma from '../lib/prisma.js';
 import { config } from '../config/index.js';
 import { CreatePetInput, UpdatePetInput } from '../validations/schemas.js';
+import { generatePetQRCode, generateQRCodeWithLogo } from '../lib/qrcode.js';
 import { 
   ForbiddenError, 
   NotFoundError, 
@@ -25,19 +25,29 @@ function generateSlug(nombre: string): string {
 }
 
 /**
- * Generar codigo QR para una mascota
+ * Generar codigo QR para una mascota con logo opcional
  */
-async function generateQRCode(slug: string): Promise<string> {
+async function generateQRCode(slug: string, logoUrl?: string): Promise<string> {
   const petUrl = `${config.frontendUrl}/${slug}`;
-  const qrDataUrl = await QRCode.toDataURL(petUrl, {
-    width: 400,
-    margin: 2,
-    color: {
-      dark: '#000000',
-      light: '#FFFFFF',
-    },
-  });
-  return qrDataUrl;
+  
+  // Si hay logo personalizado, usarlo
+  if (logoUrl) {
+    return generateQRCodeWithLogo(petUrl, {
+      width: 500,
+      margin: 2,
+      errorCorrectionLevel: 'H',
+      logo: {
+        url: logoUrl,
+        size: 100,
+        borderRadius: 12,
+        backgroundColor: '#FFFFFF',
+        padding: 10,
+      },
+    });
+  }
+  
+  // Intentar usar logo predeterminado de PetQR
+  return generatePetQRCode(petUrl);
 }
 
 /**

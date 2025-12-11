@@ -28,6 +28,11 @@ coverage/
 Thumbs.db
 
 # Uploads (opcional, según tu preferencia)
+uploads/
+
+# Test files
+test-qr*.txt
+test-qr*.png
 uploads/*
 !uploads/.gitkeep
 
