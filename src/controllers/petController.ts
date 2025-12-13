@@ -306,6 +306,9 @@ export async function createPet(
     });
 
     // Generar QR Code con UUID permanente
+    if (!pet.qrUuid) {
+      throw new Error('qrUuid no generado correctamente');
+    }
     const qrCode = await generateQRCode(pet.qrUuid);
 
     // Actualizar mascota con el QR
@@ -481,6 +484,9 @@ export async function getQRCode(
     // Si no tiene QR, generarlo con qrUuid permanente
     let qrCode = pet.qrCode;
     if (!qrCode) {
+      if (!pet.qrUuid) {
+        throw new Error('Mascota sin qrUuid. Contacta al administrador.');
+      }
       qrCode = await generateQRCode(pet.qrUuid);
       await prisma.pet.update({
         where: { id: pet.id },

@@ -36,7 +36,7 @@ model User {
 model Pet {
   id            String  @id @default(uuid())
   slug          String  @unique
-  qrUuid        String  @unique @default(uuid()) // UUID permanente para el QR
+  qrUuid        String? @unique @default(uuid()) // UUID permanente para el QR (opcional temporalmente)
   nombre        String
   especie       String // Perro, Gato, etc.
   raza          String
