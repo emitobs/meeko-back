@@ -503,469 +503,468 @@
                         "header": [],
                         "url": {
                             "raw": "{{baseUrl}}/pets/qr/{{qrUuid}}",
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n  \"nombre\": \"Firulais Jr.\",\n  \"slug\": \"firulais-jr-2024\",\n  \"edad\": \"4 años\",\n  \"descripcion\": \"Sigue siendo muy amigable pero ahora más tranquilo\"\n}"
-                            "path": [
-                                "pets",
-                                "qr",
-                                "{{qrUuid}}"
-                            ]
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\n  \"nombre\": \"Firulais Jr.\",\n  \"slug\": \"firulais-jr-2024\",\n  \"edad\": \"4 años\",\n  \"descripcion\": \"Sigue siendo muy amigable pero ahora más tranquilo\"\n}""path": [
+                                    "pets",
+                                    "qr",
+                                    "{{qrUuid}}"
+                                ]
+                            },
+                            "description": "Obtener información de una mascota por su QR UUID (permanente, no cambia aunque cambien el slug)"
                         },
-                        "description": "Obtener información de una mascota por su QR UUID (permanente, no cambia aunque cambien el slug)"
+                        "response": []
                     },
-                    "response": []
-                },
-                {
-                    "name": "Actualizar Mascota",
-                    "request": {
-                        "method": "PATCH",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n  \"nombre\": \"Firulais Jr.\",\n  \"edad\": \"4 años\",\n  \"descripcion\": \"Sigue siendo muy amigable pero ahora más tranquilo\"\n}"
-                        },
-                        "url": {
-                            "raw": "{{baseUrl}}/pets/{{petSlug}}",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "pets",
-                                "{{petSlug}}"
-                            ]
-                        },
-                        "description": "Actualizar información de una mascota"
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Marcar como Perdida",
-                    "request": {
-                        "method": "PATCH",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n  \"isLost\": true\n}"
-                        },
-                        "url": {
-                            "raw": "{{baseUrl}}/pets/{{petSlug}}",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "pets",
-                                "{{petSlug}}"
-                            ]
-                        },
-                        "description": "Marcar una mascota como perdida"
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Marcar como Encontrada",
-                    "request": {
-                        "method": "PATCH",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n  \"isLost\": false\n}"
-                        },
-                        "url": {
-                            "raw": "{{baseUrl}}/pets/{{petSlug}}",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "pets",
-                                "{{petSlug}}"
-                            ]
-                        },
-                        "description": "Marcar una mascota perdida como encontrada"
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Obtener Código QR",
-                    "request": {
-                        "auth": {
-                            "type": "noauth"
-                        },
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                            "raw": "{{baseUrl}}/pets/{{petSlug}}/qr",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "pets",
-                                "{{petSlug}}",
-                                "qr"
-                            ]
-                        },
-                        "description": "Obtener el código QR de una mascota"
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Registrar Escaneo de QR",
-                    "request": {
-                        "auth": {
-                            "type": "noauth"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n  \"latitude\": 19.4326,\n  \"longitude\": -99.1332\n}"
-                        },
-                        "url": {
-                            "raw": "{{baseUrl}}/pets/{{petSlug}}/scan",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "pets",
-                                "{{petSlug}}",
-                                "scan"
-                            ]
-                        },
-                        "description": "Registrar un escaneo de código QR (endpoint público)"
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Obtener Estadísticas de Escaneos",
-                    "request": {
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                            "raw": "{{baseUrl}}/pets/{{petSlug}}/scans?days=30",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "pets",
-                                "{{petSlug}}",
-                                "scans"
-                            ],
-                            "query": [
+                    {
+                        "name": "Actualizar Mascota",
+                        "request": {
+                            "method": "PATCH",
+                            "header": [
                                 {
-                                    "key": "days",
-                                    "value": "30"
+                                    "key": "Content-Type",
+                                    "value": "application/json"
                                 }
-                            ]
-                        },
-                        "description": "Obtener estadísticas de escaneos de QR"
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Eliminar Mascota",
-                    "request": {
-                        "method": "DELETE",
-                        "header": [],
-                        "url": {
-                            "raw": "{{baseUrl}}/pets/{{petSlug}}",
-                            "host": [
-                                "{{baseUrl}}"
                             ],
-                            "path": [
-                                "pets",
-                                "{{petSlug}}"
-                            ]
-                        },
-                        "description": "Eliminar una mascota"
-                    },
-                    "response": []
-                }
-            ]
-        },
-        {
-            "name": "📸 Fotos",
-            "description": "Endpoints de gestión de fotos de mascotas",
-            "item": [
-                {
-                    "name": "Listar Fotos de Mascota",
-                    "request": {
-                        "auth": {
-                            "type": "noauth"
-                        },
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                            "raw": "{{baseUrl}}/pets/{{petSlug}}/photos",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "pets",
-                                "{{petSlug}}",
-                                "photos"
-                            ]
-                        },
-                        "description": "Listar todas las fotos de una mascota"
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Agregar Foto",
-                    "event": [
-                        {
-                            "listen": "test",
-                            "script": {
-                                "exec": [
-                                    "if (pm.response.code === 201) {",
-                                    "    const response = pm.response.json();",
-                                    "    pm.collectionVariables.set('photoId', response.data.id);",
-                                    "    console.log('✅ Photo ID guardado: ' + response.data.id);",
-                                    "}"
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\n  \"nombre\": \"Firulais Jr.\",\n  \"edad\": \"4 años\",\n  \"descripcion\": \"Sigue siendo muy amigable pero ahora más tranquilo\"\n}"
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/pets/{{petSlug}}",
+                                "host": [
+                                    "{{baseUrl}}"
                                 ],
-                                "type": "text/javascript"
-                            }
-                        }
-                    ],
-                    "request": {
-                        "method": "POST",
-                        "header": [
+                                "path": [
+                                    "pets",
+                                    "{{petSlug}}"
+                                ]
+                            },
+                            "description": "Actualizar información de una mascota"
+                        },
+                        "response": []
+                    },
+                    {
+                        "name": "Marcar como Perdida",
+                        "request": {
+                            "method": "PATCH",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\n  \"isLost\": true\n}"
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/pets/{{petSlug}}",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "pets",
+                                    "{{petSlug}}"
+                                ]
+                            },
+                            "description": "Marcar una mascota como perdida"
+                        },
+                        "response": []
+                    },
+                    {
+                        "name": "Marcar como Encontrada",
+                        "request": {
+                            "method": "PATCH",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\n  \"isLost\": false\n}"
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/pets/{{petSlug}}",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "pets",
+                                    "{{petSlug}}"
+                                ]
+                            },
+                            "description": "Marcar una mascota perdida como encontrada"
+                        },
+                        "response": []
+                    },
+                    {
+                        "name": "Obtener Código QR",
+                        "request": {
+                            "auth": {
+                                "type": "noauth"
+                            },
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/pets/{{petSlug}}/qr",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "pets",
+                                    "{{petSlug}}",
+                                    "qr"
+                                ]
+                            },
+                            "description": "Obtener el código QR de una mascota"
+                        },
+                        "response": []
+                    },
+                    {
+                        "name": "Registrar Escaneo de QR",
+                        "request": {
+                            "auth": {
+                                "type": "noauth"
+                            },
+                            "method": "POST",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\n  \"latitude\": 19.4326,\n  \"longitude\": -99.1332\n}"
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/pets/{{petSlug}}/scan",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "pets",
+                                    "{{petSlug}}",
+                                    "scan"
+                                ]
+                            },
+                            "description": "Registrar un escaneo de código QR (endpoint público)"
+                        },
+                        "response": []
+                    },
+                    {
+                        "name": "Obtener Estadísticas de Escaneos",
+                        "request": {
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/pets/{{petSlug}}/scans?days=30",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "pets",
+                                    "{{petSlug}}",
+                                    "scans"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "days",
+                                        "value": "30"
+                                    }
+                                ]
+                            },
+                            "description": "Obtener estadísticas de escaneos de QR"
+                        },
+                        "response": []
+                    },
+                    {
+                        "name": "Eliminar Mascota",
+                        "request": {
+                            "method": "DELETE",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/pets/{{petSlug}}",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "pets",
+                                    "{{petSlug}}"
+                                ]
+                            },
+                            "description": "Eliminar una mascota"
+                        },
+                        "response": []
+                    }
+                ]
+            },
+            {
+                "name": "📸 Fotos",
+                "description": "Endpoints de gestión de fotos de mascotas",
+                "item": [
+                    {
+                        "name": "Listar Fotos de Mascota",
+                        "request": {
+                            "auth": {
+                                "type": "noauth"
+                            },
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/pets/{{petSlug}}/photos",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "pets",
+                                    "{{petSlug}}",
+                                    "photos"
+                                ]
+                            },
+                            "description": "Listar todas las fotos de una mascota"
+                        },
+                        "response": []
+                    },
+                    {
+                        "name": "Agregar Foto",
+                        "event": [
                             {
-                                "key": "Content-Type",
-                                "value": "application/json"
+                                "listen": "test",
+                                "script": {
+                                    "exec": [
+                                        "if (pm.response.code === 201) {",
+                                        "    const response = pm.response.json();",
+                                        "    pm.collectionVariables.set('photoId', response.data.id);",
+                                        "    console.log('✅ Photo ID guardado: ' + response.data.id);",
+                                        "}"
+                                    ],
+                                    "type": "text/javascript"
+                                }
                             }
                         ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n  \"url\": \"http://localhost:3000/uploads/foto-ejemplo.jpg\",\n  \"caption\": \"Jugando en el parque\",\n  \"orden\": 0\n}"
-                        },
-                        "url": {
-                            "raw": "{{baseUrl}}/pets/{{petSlug}}/photos",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "pets",
-                                "{{petSlug}}",
-                                "photos"
-                            ]
-                        },
-                        "description": "Agregar una nueva foto a la mascota"
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Actualizar Foto",
-                    "request": {
-                        "method": "PATCH",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n  \"caption\": \"Nueva descripción de la foto\",\n  \"orden\": 1\n}"
-                        },
-                        "url": {
-                            "raw": "{{baseUrl}}/pets/{{petSlug}}/photos/{{photoId}}",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "pets",
-                                "{{petSlug}}",
-                                "photos",
-                                "{{photoId}}"
-                            ]
-                        },
-                        "description": "Actualizar caption u orden de una foto"
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Eliminar Foto",
-                    "request": {
-                        "method": "DELETE",
-                        "header": [],
-                        "url": {
-                            "raw": "{{baseUrl}}/pets/{{petSlug}}/photos/{{photoId}}",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "pets",
-                                "{{petSlug}}",
-                                "photos",
-                                "{{photoId}}"
-                            ]
-                        },
-                        "description": "Eliminar una foto de la mascota"
-                    },
-                    "response": []
-                }
-            ]
-        },
-        {
-            "name": "📤 Upload",
-            "description": "Endpoints de subida de archivos",
-            "item": [
-                {
-                    "name": "Subir Imagen General",
-                    "request": {
-                        "method": "POST",
-                        "header": [],
-                        "body": {
-                            "mode": "formdata",
-                            "formdata": [
+                        "request": {
+                            "method": "POST",
+                            "header": [
                                 {
-                                    "key": "image",
-                                    "type": "file",
-                                    "src": ""
+                                    "key": "Content-Type",
+                                    "value": "application/json"
                                 }
-                            ]
-                        },
-                        "url": {
-                            "raw": "{{baseUrl}}/upload",
-                            "host": [
-                                "{{baseUrl}}"
                             ],
-                            "path": [
-                                "upload"
-                            ]
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\n  \"url\": \"http://localhost:3000/uploads/foto-ejemplo.jpg\",\n  \"caption\": \"Jugando en el parque\",\n  \"orden\": 0\n}"
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/pets/{{petSlug}}/photos",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "pets",
+                                    "{{petSlug}}",
+                                    "photos"
+                                ]
+                            },
+                            "description": "Agregar una nueva foto a la mascota"
                         },
-                        "description": "Subir una imagen general"
+                        "response": []
                     },
-                    "response": []
-                },
-                {
-                    "name": "Subir Avatar",
-                    "request": {
-                        "method": "POST",
-                        "header": [],
-                        "body": {
-                            "mode": "formdata",
-                            "formdata": [
+                    {
+                        "name": "Actualizar Foto",
+                        "request": {
+                            "method": "PATCH",
+                            "header": [
                                 {
-                                    "key": "image",
-                                    "type": "file",
-                                    "src": ""
+                                    "key": "Content-Type",
+                                    "value": "application/json"
                                 }
-                            ]
-                        },
-                        "url": {
-                            "raw": "{{baseUrl}}/upload/avatar",
-                            "host": [
-                                "{{baseUrl}}"
                             ],
-                            "path": [
-                                "upload",
-                                "avatar"
-                            ]
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\n  \"caption\": \"Nueva descripción de la foto\",\n  \"orden\": 1\n}"
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/pets/{{petSlug}}/photos/{{photoId}}",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "pets",
+                                    "{{petSlug}}",
+                                    "photos",
+                                    "{{photoId}}"
+                                ]
+                            },
+                            "description": "Actualizar caption u orden de una foto"
                         },
-                        "description": "Subir avatar de usuario"
+                        "response": []
                     },
-                    "response": []
-                },
-                {
-                    "name": "Subir Imagen de Mascota",
-                    "request": {
-                        "method": "POST",
-                        "header": [],
-                        "body": {
-                            "mode": "formdata",
-                            "formdata": [
-                                {
-                                    "key": "image",
-                                    "type": "file",
-                                    "src": ""
-                                }
-                            ]
+                    {
+                        "name": "Eliminar Foto",
+                        "request": {
+                            "method": "DELETE",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/pets/{{petSlug}}/photos/{{photoId}}",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "pets",
+                                    "{{petSlug}}",
+                                    "photos",
+                                    "{{photoId}}"
+                                ]
+                            },
+                            "description": "Eliminar una foto de la mascota"
                         },
-                        "url": {
-                            "raw": "{{baseUrl}}/upload/pet/{{petSlug}}",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "upload",
-                                "pet",
-                                "{{petSlug}}"
-                            ]
+                        "response": []
+                    }
+                ]
+            },
+            {
+                "name": "📤 Upload",
+                "description": "Endpoints de subida de archivos",
+                "item": [
+                    {
+                        "name": "Subir Imagen General",
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "formdata",
+                                "formdata": [
+                                    {
+                                        "key": "image",
+                                        "type": "file",
+                                        "src": ""
+                                    }
+                                ]
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/upload",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "upload"
+                                ]
+                            },
+                            "description": "Subir una imagen general"
                         },
-                        "description": "Subir imagen para una mascota específica"
+                        "response": []
                     },
-                    "response": []
-                }
-            ]
-        },
-        {
-            "name": "🔧 Health",
-            "description": "Endpoints de estado del sistema",
-            "item": [
-                {
-                    "name": "Health Check",
-                    "request": {
-                        "auth": {
-                            "type": "noauth"
+                    {
+                        "name": "Subir Avatar",
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "formdata",
+                                "formdata": [
+                                    {
+                                        "key": "image",
+                                        "type": "file",
+                                        "src": ""
+                                    }
+                                ]
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/upload/avatar",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "upload",
+                                    "avatar"
+                                ]
+                            },
+                            "description": "Subir avatar de usuario"
                         },
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                            "raw": "{{baseUrl}}/health",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "health"
-                            ]
-                        },
-                        "description": "Verificar estado de la API"
+                        "response": []
                     },
-                    "response": []
-                },
-                {
-                    "name": "API Root",
-                    "request": {
-                        "auth": {
-                            "type": "noauth"
+                    {
+                        "name": "Subir Imagen de Mascota",
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "formdata",
+                                "formdata": [
+                                    {
+                                        "key": "image",
+                                        "type": "file",
+                                        "src": ""
+                                    }
+                                ]
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/upload/pet/{{petSlug}}",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "upload",
+                                    "pet",
+                                    "{{petSlug}}"
+                                ]
+                            },
+                            "description": "Subir imagen para una mascota específica"
                         },
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                            "raw": "http://localhost:3000/",
-                            "host": [
-                                "http://localhost:3000"
-                            ],
-                            "path": [
-                                ""
-                            ]
+                        "response": []
+                    }
+                ]
+            },
+            {
+                "name": "🔧 Health",
+                "description": "Endpoints de estado del sistema",
+                "item": [
+                    {
+                        "name": "Health Check",
+                        "request": {
+                            "auth": {
+                                "type": "noauth"
+                            },
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/health",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "health"
+                                ]
+                            },
+                            "description": "Verificar estado de la API"
                         },
-                        "description": "Información general de la API"
+                        "response": []
                     },
-                    "response": []
-                }
-            ]
-        }
-    ]
-}
+                    {
+                        "name": "API Root",
+                        "request": {
+                            "auth": {
+                                "type": "noauth"
+                            },
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "http://localhost:3000/",
+                                "host": [
+                                    "http://localhost:3000"
+                                ],
+                                "path": [
+                                    ""
+                                ]
+                            },
+                            "description": "Información general de la API"
+                        },
+                        "response": []
+                    }
+                ]
+            }
+        ]
+    }

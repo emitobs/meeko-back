@@ -12,8 +12,8 @@ datasource db {
 
 // Usuario/Dueño de mascotas
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
+  id        String  @id @default(uuid())
+  email     String  @unique
   password  String
   nombre    String
   telefono  String?
@@ -21,81 +21,81 @@ model User {
   instagram String?
   facebook  String?
   avatar    String?
-  
+
   // Relaciones
-  pets      Pet[]
-  
+  pets Pet[]
+
   // Timestamps
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   @@map("users")
 }
 
 // Mascota
 model Pet {
-  id            String   @id @default(uuid())
-  slug          String   @unique
-  qrUuid        String   @unique @default(uuid()) // UUID permanente para el QR
+  id            String  @id @default(uuid())
+  slug          String  @unique
+  qrUuid        String  @unique @default(uuid()) // UUID permanente para el QR
   nombre        String
-  especie       String   // Perro, Gato, etc.
+  especie       String // Perro, Gato, etc.
   raza          String
   edad          String
   descripcion   String
   indicaciones  String?
   fotoPrincipal String?
   ubicacion     String?
-  
+
   // QR Code
-  qrCode        String?  // URL o path del QR generado
-  
+  qrCode String? // URL o path del QR generado
+
   // Dueño
-  ownerId       String
-  owner         User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
   // Fotos adicionales
-  fotos         PetPhoto[]
-  
+  fotos PetPhoto[]
+
   // Estadísticas de escaneos
-  scans         QRScan[]
-  
+  scans QRScan[]
+
   // Estado
-  isLost        Boolean  @default(false)
-  lostAt        DateTime?
-  foundAt       DateTime?
-  
+  isLost  Boolean   @default(false)
+  lostAt  DateTime?
+  foundAt DateTime?
+
   // Timestamps
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@map("pets")
 }
 
 // Fotos de mascotas
 model PetPhoto {
-  id        String   @id @default(uuid())
-  url       String
-  caption   String?
-  orden     Int      @default(0)
-  
+  id      String  @id @default(uuid())
+  url     String
+  caption String?
+  orden   Int     @default(0)
+
   // Relación
-  petId     String
-  pet       Pet      @relation(fields: [petId], references: [id], onDelete: Cascade)
-  
+  petId String
+  pet   Pet    @relation(fields: [petId], references: [id], onDelete: Cascade)
+
   // Timestamps
   createdAt DateTime @default(now())
-  
+
   @@map("pet_photos")
 }
 
 // Registro de escaneos de QR
 model QRScan {
-  id        String   @id @default(uuid())
-  
+  id String @id @default(uuid())
+
   // Mascota escaneada
-  petId     String
-  pet       Pet      @relation(fields: [petId], references: [id], onDelete: Cascade)
-  
+  petId String
+  pet   Pet    @relation(fields: [petId], references: [id], onDelete: Cascade)
+
   // Información del escaneo
   ip        String?
   userAgent String?
@@ -103,10 +103,10 @@ model QRScan {
   longitude Float?
   city      String?
   country   String?
-  
+
   // Timestamps
   scannedAt DateTime @default(now())
-  
+
   @@map("qr_scans")
 }
 
@@ -116,8 +116,8 @@ model RefreshToken {
   token     String   @unique
   userId    String
   expiresAt DateTime
-  
+
   createdAt DateTime @default(now())
-  
+
   @@map("refresh_tokens")
 }
