@@ -38,6 +38,11 @@ export const changePasswordSchema = z.object({
 
 export const createPetSchema = z.object({
   nombre: z.string().min(1, 'El nombre es requerido'),
+  slug: z.string()
+    .min(3, 'El slug debe tener al menos 3 caracteres')
+    .max(50, 'El slug no puede tener más de 50 caracteres')
+    .regex(/^[a-z0-9-]+$/, 'El slug solo puede contener letras minúsculas, números y guiones')
+    .optional(),
   especie: z.string().min(1, 'La especie es requerida'),
   raza: z.string().min(1, 'La raza es requerida'),
   edad: z.string().min(1, 'La edad es requerida'),
@@ -49,6 +54,11 @@ export const createPetSchema = z.object({
 
 export const updatePetSchema = z.object({
   nombre: z.string().min(1, 'El nombre es requerido').optional(),
+  slug: z.string()
+    .min(3, 'El slug debe tener al menos 3 caracteres')
+    .max(50, 'El slug no puede tener más de 50 caracteres')
+    .regex(/^[a-z0-9-]+$/, 'El slug solo puede contener letras minúsculas, números y guiones')
+    .optional(),
   especie: z.string().min(1, 'La especie es requerida').optional(),
   raza: z.string().min(1, 'La raza es requerida').optional(),
   edad: z.string().min(1, 'La edad es requerida').optional(),

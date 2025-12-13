@@ -5,6 +5,7 @@ import { createPetSchema, updatePetSchema, qrScanSchema } from '../validations/s
 import {
   getAllPets,
   getPetBySlug,
+  getPetByQrUuid,
   getMyPets,
   createPet,
   updatePet,
@@ -66,6 +67,9 @@ router.get('/', getAllPets);
  *         description: No autenticado
  */
 router.get('/my-pets', authenticate, getMyPets);
+
+// Ruta para buscar mascota por QR UUID (permanente) - DEBE IR ANTES DE /:slug
+router.get('/qr/:qrUuid', getPetByQrUuid);
 
 /**
  * @swagger

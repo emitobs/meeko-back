@@ -26,9 +26,10 @@ function generateSlug(nombre: string): string {
 
 /**
  * Generar codigo QR para una mascota con logo opcional
+ * Usa qrUuid para URL permanente (no cambia con el slug)
  */
-async function generateQRCode(slug: string, logoUrl?: string): Promise<string> {
-  const petUrl = `${config.frontendUrl}/${slug}`;
+async function generateQRCode(qrUuid: string, logoUrl?: string): Promise<string> {
+  const petUrl = `${config.frontendUrl}/pet/${qrUuid}`;
 
   // Si hay logo personalizado, usarlo
   if (logoUrl) {
@@ -117,7 +118,54 @@ export async function getAllPets(
 }
 
 /**
- * Obtener mascota por slug (publico)
+ * Obtener mascota por qrUuid (para escaneo de QR)
+ * GET /api/v1/pet/:qrUuid
+ */
+export async function getPetByQrUuid(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { qrUuid } = req.params;
+
+    const pet = await prisma.pet.findUnique({
+      where: { qrUuid },
+      include: {
+        owner: {
+          select: {
+            id: true,
+            nombre: true,
+            telefono: true,
+            whatsapp: true,
+            instagram: true,
+            facebook: true,
+          },
+        },
+        fotos: {
+          orderBy: { orden: 'asc' },
+        },
+        _count: {
+          select: { scans: true },
+        },
+      },
+    });
+
+    if (!pet) {
+      throw new NotFoundError('Mascota no encontrada');
+    }
+
+    res.json({
+      success: true,
+      data: pet,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * Obtener mascota por slug
  * GET /api/v1/pets/:slug
  */
 export async function getPetBySlug(
@@ -211,10 +259,23 @@ export async function createPet(
       throw new UnauthorizedError('Usuario no autenticado');
     }
 
-    const { nombre, especie, raza, edad, descripcion, indicaciones, ubicacion, fotoPrincipal } = req.body;
+    const { nombre, slug: customSlug, especie, raza, edad, descripcion, indicaciones, ubicacion, fotoPrincipal } = req.body;
 
-    // Generar slug unico
-    const slug = generateSlug(nombre);
+    // Usar slug personalizado o generar uno automático
+    let slug = customSlug || generateSlug(nombre);
+
+    // Verificar que el slug sea único
+    const existingPet = await prisma.pet.findUnique({
+      where: { slug },
+    });
+
+    if (existingPet) {
+      res.status(409).json({
+        success: false,
+        message: 'Este slug ya está en uso. Por favor elige otro.',
+      });
+      return;
+    }
 
     // Crear mascota
     const pet = await prisma.pet.create({
@@ -244,8 +305,8 @@ export async function createPet(
       },
     });
 
-    // Generar QR Code
-    const qrCode = await generateQRCode(pet.slug);
+    // Generar QR Code con UUID permanente
+    const qrCode = await generateQRCode(pet.qrUuid);
 
     // Actualizar mascota con el QR
     await prisma.pet.update({
@@ -295,8 +356,25 @@ export async function updatePet(
       throw new ForbiddenError('No tienes permiso para editar esta mascota');
     }
 
+    // Si se está actualizando el slug, verificar que sea único
+    if (req.body.slug && req.body.slug !== existingPet.slug) {
+      const slugExists = await prisma.pet.findUnique({
+        where: { slug: req.body.slug },
+      });
+
+      if (slugExists) {
+        res.status(409).json({
+          success: false,
+          message: 'Este slug ya está en uso. Por favor elige otro.',
+        });
+        return;
+      }
+    }
+
     // Manejar el estado de perdida
-    const updateData: UpdatePetInput & { lostAt?: Date | null; foundAt?: Date | null } = { ...req.body };
+    const updateData: UpdatePetInput & { lostAt?: Date | null; foundAt?: Date | null; qrCode?: string } = { ...req.body };
+
+    // Ya no regeneramos QR al cambiar slug, porque usa qrUuid permanente
 
     if (req.body.isLost !== undefined) {
       if (req.body.isLost && !existingPet.isLost) {
@@ -393,17 +471,17 @@ export async function getQRCode(
 
     const pet = await prisma.pet.findUnique({
       where: { slug },
-      select: { id: true, qrCode: true, slug: true },
+      select: { id: true, qrCode: true, qrUuid: true, slug: true },
     });
 
     if (!pet) {
       throw new NotFoundError('Mascota no encontrada');
     }
 
-    // Si no tiene QR, generarlo
+    // Si no tiene QR, generarlo con qrUuid permanente
     let qrCode = pet.qrCode;
     if (!qrCode) {
-      qrCode = await generateQRCode(pet.slug);
+      qrCode = await generateQRCode(pet.qrUuid);
       await prisma.pet.update({
         where: { id: pet.id },
         data: { qrCode },
@@ -413,9 +491,11 @@ export async function getQRCode(
     res.json({
       success: true,
       data: {
-        slug: pet.slug,
         qrCode,
-        url: `${config.frontendUrl}/${pet.slug}`,
+        qrUuid: pet.qrUuid,
+        slug: pet.slug,
+        petId: pet.id,
+        url: `${config.frontendUrl}/pet/${pet.qrUuid}`,
       },
     });
   } catch (error) {

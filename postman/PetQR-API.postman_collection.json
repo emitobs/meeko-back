@@ -37,6 +37,11 @@
             "type": "string"
         },
         {
+            "key": "qrUuid",
+            "value": "",
+            "type": "string"
+        },
+        {
             "key": "photoId",
             "value": "",
             "type": "string"
@@ -424,7 +429,9 @@
                                     "if (pm.response.code === 201) {",
                                     "    const response = pm.response.json();",
                                     "    pm.collectionVariables.set('petSlug', response.data.slug);",
+                                    "    pm.collectionVariables.set('qrUuid', response.data.qrUuid);",
                                     "    console.log('✅ Slug guardado: ' + response.data.slug);",
+                                    "    console.log('✅ QR UUID guardado: ' + response.data.qrUuid);",
                                     "}",
                                     "",
                                     "pm.test('Mascota creada', function () {",
@@ -432,6 +439,7 @@
                                     "    const response = pm.response.json();",
                                     "    pm.expect(response.success).to.be.true;",
                                     "    pm.expect(response.data.slug).to.exist;",
+                                    "    pm.expect(response.data.qrUuid).to.exist;",
                                     "});"
                                 ],
                                 "type": "text/javascript"
@@ -448,7 +456,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"nombre\": \"Firulais\",\n  \"especie\": \"Perro\",\n  \"raza\": \"Labrador Retriever\",\n  \"edad\": \"3 años\",\n  \"descripcion\": \"Perro muy amigable y juguetón. Le encanta correr en el parque.\",\n  \"indicaciones\": \"Le gusta que le rasquen las orejas. Es alérgico al pollo.\",\n  \"ubicacion\": \"Ciudad de México, CDMX\"\n}"
+                            "raw": "{\n  \"nombre\": \"Firulais\",\n  \"slug\": \"firulais-cdmx\",\n  \"especie\": \"Perro\",\n  \"raza\": \"Labrador Retriever\",\n  \"edad\": \"3 años\",\n  \"descripcion\": \"Perro muy amigable y juguetón. Le encanta correr en el parque.\",\n  \"indicaciones\": \"Le gusta que le rasquen las orejas. Es alérgico al pollo.\",\n  \"ubicacion\": \"Ciudad de México, CDMX\"\n}"
                         },
                         "url": {
                             "raw": "{{baseUrl}}/pets",
@@ -481,7 +489,30 @@
                                 "{{petSlug}}"
                             ]
                         },
-                        "description": "Obtener información de una mascota por su slug"
+                        "description": "Obtener información de una mascota por su slug (editable)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Obtener Mascota por QR UUID",
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/pets/qr/{{qrUuid}}",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"Firulais Jr.\",\n  \"slug\": \"firulais-jr-2024\",\n  \"edad\": \"4 años\",\n  \"descripcion\": \"Sigue siendo muy amigable pero ahora más tranquilo\"\n}"
+                            "path": [
+                                "pets",
+                                "qr",
+                                "{{qrUuid}}"
+                            ]
+                        },
+                        "description": "Obtener información de una mascota por su QR UUID (permanente, no cambia aunque cambien el slug)"
                     },
                     "response": []
                 },
