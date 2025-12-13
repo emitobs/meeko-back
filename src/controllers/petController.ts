@@ -4,10 +4,10 @@ import prisma from '../lib/prisma.js';
 import { config } from '../config/index.js';
 import { CreatePetInput, UpdatePetInput } from '../validations/schemas.js';
 import { generatePetQRCode, generateQRCodeWithLogo } from '../lib/qrcode.js';
-import { 
-  ForbiddenError, 
-  NotFoundError, 
-  UnauthorizedError 
+import {
+  ForbiddenError,
+  NotFoundError,
+  UnauthorizedError
 } from '../middleware/errorHandler.js';
 
 /**
@@ -20,7 +20,7 @@ function generateSlug(nombre: string): string {
     .replace(/[\u0300-\u036f]/g, '') // Remover acentos
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
-  
+
   return `${baseSlug}-${uuidv4().slice(0, 8)}`;
 }
 
@@ -29,7 +29,7 @@ function generateSlug(nombre: string): string {
  */
 async function generateQRCode(slug: string, logoUrl?: string): Promise<string> {
   const petUrl = `${config.frontendUrl}/${slug}`;
-  
+
   // Si hay logo personalizado, usarlo
   if (logoUrl) {
     return generateQRCodeWithLogo(petUrl, {
@@ -45,7 +45,7 @@ async function generateQRCode(slug: string, logoUrl?: string): Promise<string> {
       },
     });
   }
-  
+
   // Intentar usar logo predeterminado de PetQR
   return generatePetQRCode(petUrl);
 }
@@ -297,7 +297,7 @@ export async function updatePet(
 
     // Manejar el estado de perdida
     const updateData: UpdatePetInput & { lostAt?: Date | null; foundAt?: Date | null } = { ...req.body };
-    
+
     if (req.body.isLost !== undefined) {
       if (req.body.isLost && !existingPet.isLost) {
         updateData.lostAt = new Date();

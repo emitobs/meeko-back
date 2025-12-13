@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import rateLimit from 'express-rate-limit';
+// import rateLimit from 'express-rate-limit'; // Deshabilitado en desarrollo
 import swaggerUi from 'swagger-ui-express';
 
 import { config } from './config/index.js';
@@ -40,7 +40,7 @@ app.use(cors({
       'http://127.0.0.1:5173',
       'http://127.0.0.1:5174',
     ];
-    
+
     // Permitir solicitudes sin origin (como Postman, curl, etc.)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
@@ -58,16 +58,16 @@ app.use(cors({
   optionsSuccessStatus: 204
 }));
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: config.rateLimit.windowMs,
-  max: config.rateLimit.max,
-  message: {
-    success: false,
-    message: 'Demasiadas solicitudes, intenta de nuevo más tarde',
-  },
-});
-app.use(limiter);
+// Rate limiting - DESHABILITADO EN DESARROLLO
+// const limiter = rateLimit({
+//   windowMs: config.rateLimit.windowMs,
+//   max: config.rateLimit.max,
+//   message: {
+//     success: false,
+//     message: 'Demasiadas solicitudes, intenta de nuevo más tarde',
+//   },
+// });
+// app.use(limiter);
 
 // Parsear JSON
 app.use(express.json({ limit: '10mb' }));
@@ -129,7 +129,7 @@ const server = app.listen(config.port, () => {
 // ================================
 const gracefulShutdown = async (signal: string) => {
   console.log(`\n📴 ${signal} recibido. Cerrando servidor...`);
-  
+
   server.close(async () => {
     console.log('🔌 Conexiones HTTP cerradas');
     await disconnectPrisma();
